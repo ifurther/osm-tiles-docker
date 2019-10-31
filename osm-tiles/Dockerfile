@@ -1,16 +1,28 @@
-FROM osmtw/modtile:v3.0.9
+FROM ubuntu:bionic
 MAINTAINER Rex Tsai <rex.cc.tsai@gmail.com>
+
+RUN sed --in-place --regexp-extended "s/(\/\/)(archive\.ubuntu)/\1tw.\2/" /etc/apt/sources.list
 
 RUN apt-get update \
  && apt-get dist-upgrade -y
 
 # Install the Mapnik stylesheet and the coastline data
-RUN apt-get install -y subversion unzip wget \
- && svn co http://svn.openstreetmap.org/applications/rendering/mapnik /usr/local/src/mapnik-style \
- && bash -e /usr/local/src/mapnik-style/get-coastlines.sh /usr/local/share \
- && cd -
-
+RUN apt-get install -y autoconf apache2-dev libtool libxml2-dev libbz2-dev \
+                       libgeos-dev libgeos++-dev libproj-dev gdal-bin libmapnik-dev \
+					   mapnik-utils python-mapnik npm nodejs
+					  RUN apt-get install -y git
+RUN cd /tmp &&\
+    git clone -b switch2osm git://github.com/SomeoneElseOSM/mod_tile.git &&\
+	cd mod_tile &&\
+    ./autogen.sh &&\
+	./configure &&\
+	make &&\
+	make install &&\
+	make install-mod_tile &&\
+	chmod 644 /usr/lib/apache2/modules/mod_tile.so
+	
 ## Configure mapnik style-sheets
+RUN git clone https://github.com/openstreetmap/mapnik-stylesheets.git /usr/local/src/mapnik-style
 ADD settings.sed /tmp/
 ADD fontset-settings.xml.inc /usr/local/src/mapnik-style/inc/fontset-settings.xml.inc
 ADD datasource-settings.sh /usr/local/bin/datasource-settings.sh
@@ -21,10 +33,12 @@ RUN cd /usr/local/src/mapnik-style/inc \
  && cd -
 
 # Install openstreetmap-carto
-ENV OSM_CARTO_VERSION=v2.39.0
+ENV OSM_CARTO_VERSION=v4.24.1
 RUN git clone --depth 1 --branch ${OSM_CARTO_VERSION} https://github.com/gravitystorm/openstreetmap-carto.git /usr/local/src/openstreetmap-carto \
  && cd /usr/local/src/openstreetmap-carto \
- && ./get-shapefiles.sh \
+ $$ npm install -g carto \
+ && ./scripts/get-shapefiles.py -n -u \
+ && carto project.mml > mapnik.xml \
  && cd -
 
 # Install osm-bright
