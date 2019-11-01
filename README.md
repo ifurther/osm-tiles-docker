@@ -13,7 +13,7 @@ _ osm2pgsql, Convert OSM planet snapshot data to SQL suitable for loading
 
 # Map styles.
 The docker instances will build and servie tile based on the following stylesheets.
-- Mapnik stylesheet http://svn.openstreetmap.org/applications/rendering/mapnik
+- Mapnik stylesheet https://github.com/mapnik/mapnik.git
 - openstreetmap-carto https://github.com/gravitystorm/openstreetmap-carto.git
 - osm-bright https://github.com/mapbox/osm-bright.git
 - leafletjs frontend
