@@ -36,7 +36,7 @@ RUN cd /usr/local/src/mapnik-style/inc \
 ENV OSM_CARTO_VERSION=v4.24.1
 RUN git clone --depth 1 --branch ${OSM_CARTO_VERSION} https://github.com/gravitystorm/openstreetmap-carto.git /usr/local/src/openstreetmap-carto \
  && cd /usr/local/src/openstreetmap-carto \
- $$ npm install -g carto \
+ && npm install -g carto \
  && ./scripts/get-shapefiles.py -n -u \
  && carto project.mml > mapnik.xml \
  && cd -
