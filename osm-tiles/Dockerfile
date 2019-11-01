@@ -61,7 +61,7 @@ ADD renderd.conf /usr/local/etc/renderd.conf
 RUN install --owner=www-data --group=www-data -d /var/run/renderd
 
 # Setup supervisord
-ENV SUPERVISOR_VERSION=3.2.0-2
+ENV SUPERVISOR_VERSION=3.3.1-1.1
 ADD supervisord.conf /etc/supervisord.conf
 RUN apt-get install -y supervisor=${SUPERVISOR_VERSION}
 
