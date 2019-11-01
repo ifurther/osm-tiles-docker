@@ -17,7 +17,7 @@ services:
     depends_on:
         - postgis
   osm2pgsql:
-    image: osmtw/osm2pgsql:0.88.1
+    image: osmtw/osm2pgsql:latest
     links:
         - postgis:pg
     volumes:
@@ -34,7 +34,7 @@ services:
     depends_on:
         - postgis
   postgis:
-    image: osmtw/postgis:9.5-2.2
+    image: osmtw/postgis:9.6-2.4
     environment:
         - POSTGRES_USER=postgres
         - POSTGRES_DB=postgres
